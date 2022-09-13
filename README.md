@@ -21,6 +21,7 @@ The script was tested and currently works with:
 * Python 3.9.10
 * yfinance 0.1.74
 * pandas 1.4.4
+* openpyxl 3.0.10
 
 If Python is already installed, you can install the packages with:
 
