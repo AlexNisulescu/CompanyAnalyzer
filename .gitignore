@@ -2,3 +2,4 @@ test*
 *.csv
 *.xlsx
 .DS_Store
+Tickers
