@@ -1,4 +1,4 @@
-# Python script for downloading companies financial data
+# Python script for downloading financial data for listed companies
 
 ## Index
 
@@ -10,7 +10,7 @@
 
 ## Introduction
 
-This script was created from the need to simplify the way I analize financial data of companies.
+This script was created from the need to simplify the way I analyze the financial data of companies.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ If Python is already installed, you can install the packages with:
 
     pip3 install pandas yfinance
 
-The script will use a text file named Tickers in order to download the required data.
+The script will use a text file named Tickers to download the required data.
 The data downloaded by it is:
 
 * Sector
@@ -38,10 +38,10 @@ The data downloaded by it is:
 * Debt to Equity
 * Profit Margins
 * Gross Margins
-* Five Years Average Dividend Yeald
+* Five Years Average Dividend Yield
 * Last Dividend Value
-* Three Year Average Return
-* Five Year Average Return
+* Three-Year Average Return
+* Five-Year Average Return
 * Total Cash
 * Total Assets
 * Total Debt
@@ -55,7 +55,7 @@ Syntax:
 
     python3 companyanalyzer.py
 
-The script has no options required at running, except the existence of Tickers where the will need to be placed on a new row the tickers of the companies which you want to analyze.
+The script has no options required at running, except the existence of Tickers where they will need to be placed on a new row the tickers of the companies which you want to analyze.
 
 ## Contributors
 
