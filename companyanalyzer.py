@@ -15,8 +15,7 @@ def create_df():
                         'Profit Margins', 'Gross Margins', 
                         'Five Years Average Dividend Yeald', 'Last Dividend Value',
                         'Three Year Average Return', 'Five Year Average Return', 
-                        'Total Cash', 'Total Assets', 'Total Debt', 'Forward P/E',
-                        'Morning Star Risk Rating', 'Morning Star Overall Rating'])
+                        'Total Cash', 'Total Assets', 'Total Debt', 'Forward P/E'])
     return df
 
 # This function gets the details of the companies and stores them in a dataframe
@@ -38,16 +37,21 @@ def get_details(tkrs):
         details.info['threeYearAverageReturn'], 'Five Year Average Return':
         details.info['fiveYearAverageReturn'], 'Total Cash':details.info['totalCash'],
         'Total Assets':details.info['totalAssets'], 'Total Debt':
-        details.info['totalDebt'], 'Forward P/E':details.info['forwardPE'],
-        'Morning Star Risk Rating':details.info['morningStarRiskRating'],
-        'Morning Star Overall Rating':details.info['morningStarOverallRating']}
+        details.info['totalDebt'], 'Forward P/E':details.info['forwardPE']}
         # Appends the new row to the dataframe
         df = df.append(new_row, ignore_index=True)
+    # Sorts the companies by MarketCap
+    df.sort_values(by=['MarketCap'], inplace=True)
+    # Resets the index
+    df = df.reset_index()
+    # Drop the index column
+    df.drop('index', axis=1, inplace=True)
     return df
     
 # This functions saves the dataframe to an excell
 def save_dataframe_to_excell(df):
     df.to_excel('companies.xlsx')
+
 # This functions saves the dataframe to a csv
 def save_dataframe_to_csv(df):
     df.to_csv('companies.csv')
@@ -56,5 +60,7 @@ def save_dataframe_to_csv(df):
 tickers = read_tickers("Tickers")
 # Getting companies details
 companydf = get_details(tickers)
+# Starting the index count from 1
+companydf.index += 1
 # Saving the details to an Excell file
 save_dataframe_to_excell(companydf)

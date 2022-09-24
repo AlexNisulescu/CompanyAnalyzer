@@ -46,8 +46,6 @@ The data downloaded by it is:
 * Total Assets
 * Total Debt
 * Forward P/E
-* Morning Star Risk Rating
-* Morning Star Overall Rating
 
 ## How to use it
 
