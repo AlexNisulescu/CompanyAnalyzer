@@ -1,5 +1,6 @@
 import yfinance as yf # Used for financial data
 import pandas as pd # Used to store data in a dataframe
+from datetime import date
 
 # This function is used to read the list of tickers
 def read_tickers(filename):
@@ -15,8 +16,13 @@ def create_df():
                         'Profit Margins', 'Gross Margins', 
                         'Five Years Average Dividend Yeald', 'Last Dividend Value',
                         'Three Year Average Return', 'Five Year Average Return', 
-                        'Total Cash', 'Total Assets', 'Total Debt', 'Forward P/E'])
+                        'Worth', 'Total Cash', 'Total Assets', 'Total Debt', 
+                        'Forward P/E'])
     return df
+
+def calculate_worth(cash, assets, debt):
+    worth = cash + assets - debt
+    return worth
 
 # This function gets the details of the companies and stores them in a dataframe
 def get_details(tkrs):
@@ -25,6 +31,19 @@ def get_details(tkrs):
     for ticker in tkrs:
         # Requests the company details
         details = yf.Ticker(ticker)
+        try:
+            details.info['totalCash'] = int(details.info['totalCash'])
+        except TypeError:
+            details.info['totalCash'] = 0
+        try:
+            details.info['totalAssets'] = int(details.info['totalAssets'])
+        except TypeError:
+            details.info['totalAssets'] = 0
+        try:
+            details.info['totalDebt'] = int(details.info['totalDebt'])
+        except TypeError:
+            details.info['totalDebt'] = 0
+        worth = calculate_worth(details.info['totalCash'], details.info['totalAssets'], details.info['totalDebt'])
         # Creates a new row for the dataframe
         new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
         details.info['industry'], 'MarketCap':details.info['marketCap'],
@@ -35,7 +54,7 @@ def get_details(tkrs):
         details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
         details.info['lastDividendValue'], 'Three Year Average Return':
         details.info['threeYearAverageReturn'], 'Five Year Average Return':
-        details.info['fiveYearAverageReturn'], 'Total Cash':details.info['totalCash'],
+        details.info['fiveYearAverageReturn'], 'Worth':worth ,'Total Cash':details.info['totalCash'],
         'Total Assets':details.info['totalAssets'], 'Total Debt':
         details.info['totalDebt'], 'Forward P/E':details.info['forwardPE']}
         # Appends the new row to the dataframe
@@ -48,9 +67,10 @@ def get_details(tkrs):
     df.drop('index', axis=1, inplace=True)
     return df
     
-# This functions saves the dataframe to an excell
+# This functions saves the dataframe to an excel
 def save_dataframe_to_excell(df):
-    df.to_excel('companies.xlsx')
+    today = date.today()
+    df.to_excel('companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
 
 # This functions saves the dataframe to a csv
 def save_dataframe_to_csv(df):
