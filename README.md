@@ -25,7 +25,7 @@ The script was tested and currently works with:
 
 If Python is already installed, you can install the packages with:
 
-    pip3 install pandas yfinance
+    pip3 install -r requirements.txt
 
 The script will use a text file named Tickers to download the required data.
 The data downloaded by it is:
