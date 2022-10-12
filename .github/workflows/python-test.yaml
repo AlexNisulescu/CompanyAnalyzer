@@ -48,7 +48,7 @@ jobs:
       with:
         name: companies-csv
     - shell: bash
-      run:
+      run: |
         test -f companies.csv
         grep "MSFT" companies.csv
     
