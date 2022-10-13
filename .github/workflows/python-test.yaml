@@ -15,6 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.9
@@ -34,18 +35,20 @@ jobs:
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: companies-xlsx
-        path: companies.xlsx
+        name: companies-csv
+        path: companies.csv
         retention-days: 1
   test:
     needs: build
     runs-on: ubuntu-latest
+    environment: production
     steps:
-    - name: Download math result for job 1
+    - name: Download script csv output
       uses: actions/download-artifact@v3
       with:
-        name: companies-xlsx
+        name: companies-csv
     - shell: bash
-      run:
-        test -f companies.xlsx
+      run: |
+        test -f companies.csv
+        grep "MSFT" companies.csv
     

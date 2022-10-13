@@ -21,6 +21,12 @@ def create_df():
     return df
 
 def calculate_worth(cash, assets, debt):
+    if cash is None:
+        cash = 0
+    if assets is None:
+        assets = 0
+    if debt is None:
+        debt = 0 
     worth = cash + assets - debt
     return worth
 
@@ -84,3 +90,4 @@ companydf = get_details(tickers)
 companydf.index += 1
 # Saving the details to an Excell file
 save_dataframe_to_excell(companydf)
+save_dataframe_to_csv(companydf)
