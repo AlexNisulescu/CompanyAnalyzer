@@ -1,5 +1,5 @@
 # Python script for downloading financial data for listed companies
-
+[![Status](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml/badge.svg)](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml)
 ## Index
 
 * [Index](#index)
