@@ -9,7 +9,7 @@ def earning_per_share_calculator(price_to_earnings, current_price):
 
 # This function is used to calculate the growth rate (%) of a company
 def growth_rate_calculator(history_price, current_price):
-    return ((history_price + current_price) / history_price)
+    return ((current_price - history_price) / history_price)
 
 # This function is used to calculate the intrinsic value of a company
 def intrinsic_value_calculator(price_to_earnings, current_price, ten_years_price):
