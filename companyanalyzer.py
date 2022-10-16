@@ -1,4 +1,5 @@
 from multiprocessing import current_process
+import string
 import yfinance as yf # Used for financial data
 import pandas as pd # Used to store data in a dataframe
 from datetime import date
@@ -26,7 +27,7 @@ def margin_of_safety(intrinsic_value, current_market_price):
     # MS = ( V - CMP ) / V , where:
     # V = intrinsic_value
     # CMP = current_market_price
-    return (intrinsic_value - current_market_price) / intrinsic_value
+    return "{:.2f}".format(float(intrinsic_value - current_market_price) / intrinsic_value * 100)
 
 # This function is used to read the list of tickers
 def read_tickers(filename):
@@ -37,7 +38,7 @@ def read_tickers(filename):
 # This function creates the dataframe structure that will store the data
 def create_df():
     df = pd.DataFrame(columns=['Name', 'Sector', 'Industry', 'MarketCap',
-                        'P/E', 'Current Price', 'Intrinsic Value',
+                        'P/E', 'Current Price', 'Intrinsic Value', 'Margin of Safety',
                         'Return on Equity', 'Return on Assets', 'Current Ratio',
                         'Debt to Equity', 'Profit Margins', 'Gross Margins', 
                         'Five Years Average Dividend Yeald', 'Last Dividend Value',
@@ -69,17 +70,20 @@ def get_details(tkrs):
             details.info['totalDebt'] = int(details.info['totalDebt'])
         except TypeError:
             details.info['totalDebt'] = 0
-        worth = calculate_worth(details.info['totalCash'], details.info['totalAssets'], details.info['totalDebt'])
+        worth = calculate_worth(details.info['totalCash'],
+                details.info['totalAssets'], details.info['totalDebt'])
         ten_years_price = details.history(period='10y')
         current_price = details.history(period='1d')
         intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
                           current_price['Close'][0], ten_years_price['Close'][0])
+        safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
+        safety_margin = str(safety_margin) + '%'
         # Creates a new row for the dataframe
         new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
         details.info['industry'], 'MarketCap':details.info['marketCap'],
         'P/E':details.info['trailingPE'], 'Current Price':
         details.info['currentPrice'], 'Intrinsic Value':intrinsic_value,
-        'Debt to Equity':details.info['debtToEquity'],
+        'Margin of Safety':safety_margin,'Debt to Equity':details.info['debtToEquity'],
         'Profit Margins':details.info['profitMargins'], 'Gross Margins':
         details.info['grossMargins'], 'Five Years Average Dividend Yeald':
         details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
