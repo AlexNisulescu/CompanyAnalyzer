@@ -1,13 +1,13 @@
-from multiprocessing import current_process
-import string
 import yfinance as yf # Used for financial data
 import pandas as pd # Used to store data in a dataframe
 from datetime import date
 
 
+# This function is used to return Earnings per share of a company
 def earning_per_share_calculator(price_to_earnings, current_price):
     return current_price / price_to_earnings
 
+# This function is used to calculate the growth rate (%) of a company
 def growth_rate_calculator(history_price, current_price):
     return ((history_price + current_price) / history_price)
 
