@@ -76,13 +76,19 @@ def get_details(tkrs):
             details.info['totalDebt'] = int(details.info['totalDebt'])
         except TypeError:
             details.info['totalDebt'] = 0
+        # Calculates a company worth
         worth = calculate_worth(details.info['totalCash'],
                 details.info['totalAssets'], details.info['totalDebt'])
+        # Saves the stock price ten years ago
         ten_years_price = details.history(period='10y')
+        # Saves current price
         current_price = details.history(period='1d')
+        # Calculates the intrinsic value of the company
         intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
                           current_price['Close'][0], ten_years_price['Close'][0])
+        # Calculates the safety margin
         safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
+        # Formats the safety margin in a more human readable format
         safety_margin = str(safety_margin) + '%'
         # Creates a new row for the dataframe
         new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
