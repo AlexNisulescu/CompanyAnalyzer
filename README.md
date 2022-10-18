@@ -35,16 +35,14 @@ The data downloaded by it is:
 * MarketCap
 * P/E
 * Current Price
-* Return on Equity
-* Return on Assets
-* Current Ratio
+* Intrinsic Value
+* Margin of Safety
 * Debt to Equity
 * Profit Margins
 * Gross Margins
 * Five Years Average Dividend Yield
 * Last Dividend Value
-* Three-Year Average Return
-* Five-Year Average Return
+* Worth
 * Total Cash
 * Total Assets
 * Total Debt
@@ -65,7 +63,7 @@ The script has no options required at running, except the existence of Tickers w
 ## Contributors
 
     Creator: Alexandru Nișulescu
-    Contact: alex.nisulescu1998@gmail.com
+    Contact: alexandru.nisulescu@gmail.com
     Linkedin: https://www.linkedin.com/in/alex-nisulescu-45822b178/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
