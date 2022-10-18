@@ -2,7 +2,6 @@ import yfinance as yf # Used for financial data
 import pandas as pd # Used to store data in a dataframe
 from datetime import date
 
-
 # This function is used to return Earnings per share of a company
 def earning_per_share_calculator(price_to_earnings, current_price):
     return current_price / price_to_earnings
@@ -39,14 +38,13 @@ def read_tickers(filename):
 def create_df():
     df = pd.DataFrame(columns=['Name', 'Sector', 'Industry', 'MarketCap',
                         'P/E', 'Current Price', 'Intrinsic Value', 'Margin of Safety',
-                        'Return on Equity', 'Return on Assets', 'Current Ratio',
                         'Debt to Equity', 'Profit Margins', 'Gross Margins', 
                         'Five Years Average Dividend Yeald', 'Last Dividend Value',
-                        'Three Year Average Return', 'Five Year Average Return', 
                         'Worth', 'Total Cash', 'Total Assets', 'Total Debt', 
                         'Forward P/E'])
     return df
 
+# This function is used to calculate the worth of a company using cash/assets/debt
 def calculate_worth(cash, assets, debt):
     if cash is None:
         cash = 0
@@ -99,9 +97,7 @@ def get_details(tkrs):
         'Profit Margins':details.info['profitMargins'], 'Gross Margins':
         details.info['grossMargins'], 'Five Years Average Dividend Yeald':
         details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
-        details.info['lastDividendValue'], 'Three Year Average Return':
-        details.info['threeYearAverageReturn'], 'Five Year Average Return':
-        details.info['fiveYearAverageReturn'], 'Worth':worth ,
+        details.info['lastDividendValue'], 'Worth':worth ,
         'Total Cash':details.info['totalCash'],'Total Assets':
         details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
         'Forward P/E':details.info['forwardPE']}
