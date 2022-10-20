@@ -1,6 +1,6 @@
 from asyncore import read
 from datetime import date
-
+import os
 import pandas as pd  # Used to store data in a dataframe
 import yfinance as yf  # Used for financial data
 from openpyxl import load_workbook # Used for importing excel files
@@ -115,8 +115,16 @@ def get_details(tkrs):
     df.drop('index', axis=1, inplace=True)
     return df
     
+# This function implements the touch command from linux
+def touch(fname):
+    if os.path.exists(fname):
+        os.utime(fname, None)
+    else:
+        open(fname, 'a').close()
+
 # This functions saves the dataframe to an excel
 def save_dataframe_to_excell(df):
+    touch('companies.xlsx')
     wb = load_workbook('companies.xlsx', read_only=False)
     today = date.today()
     if today.strftime("%d.%m.%Y") not in wb.sheetnames:
