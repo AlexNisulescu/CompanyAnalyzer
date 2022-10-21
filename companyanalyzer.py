@@ -1,6 +1,10 @@
-import yfinance as yf # Used for financial data
-import pandas as pd # Used to store data in a dataframe
+from asyncore import read
 from datetime import date
+from os import path
+import pandas as pd  # Used to store data in a dataframe
+import yfinance as yf  # Used for financial data
+from openpyxl import load_workbook # Used for importing excel files
+
 
 # This function is used to return Earnings per share of a company
 def earning_per_share_calculator(price_to_earnings, current_price):
@@ -110,11 +114,28 @@ def get_details(tkrs):
     # Drop the index column
     df.drop('index', axis=1, inplace=True)
     return df
-    
+
 # This functions saves the dataframe to an excel
 def save_dataframe_to_excell(df):
     today = date.today()
-    df.to_excel('companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
+    if (path.exists('companies.xlsx')):
+        wb = load_workbook('companies.xlsx', read_only=False)
+        if today.strftime("%d.%m.%Y") not in wb.sheetnames:
+            with pd.ExcelWriter('companies.xlsx',
+                            mode='a') as writer:  
+                df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
+        else:
+            print("Attention! Data already downloaded today")
+            answer = input("Would you like to overwrite it? y/n:")
+            if answer == "y":
+                # wb.remove_sheet(wb[today.strftime("%d.%m.%Y")])
+                del wb[today.strftime("%d.%m.%Y")]
+                wb.save('companies.xlsx')
+                with pd.ExcelWriter('companies.xlsx',
+                            mode='a') as writer:  
+                    df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
+    else:
+        df.to_excel('companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
 
 # This functions saves the dataframe to a csv
 def save_dataframe_to_csv(df):
