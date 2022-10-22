@@ -78,4 +78,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile -t $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
     - name: Docker Push
-      run: docker push docker.io/$DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
+      run: docker push $DOCKER_USER/$REPO_NAME
