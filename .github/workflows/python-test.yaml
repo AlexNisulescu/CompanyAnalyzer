@@ -71,11 +71,16 @@ jobs:
       DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
       REPO_NAME: ${{secrets.DOCKERHUB_REPO}}
     steps:
-    - uses: actions/checkout@v2
-    - name: Login to Dockerhub
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile -t $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
-    - name: Docker Push
-      run: docker push $DOCKER_USER/$REPO_NAME
+      - name: Check out the repo
+        uses: actions/checkout@v3 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${GITHUB_SHA::6}
