@@ -34,13 +34,13 @@ jobs:
     - name: Run the script
       run: |
         python3 companyanalyzer.py
-    - name: 'Upload Artifact'
+    - name: 'Upload csv Artifact'
       uses: actions/upload-artifact@v3
       with:
         name: companies-csv
         path: companies.csv
         retention-days: 1
-    - name: 'Upload Artifact'
+    - name: 'Upload excel Artifact'
       uses: actions/upload-artifact@v3
       with:
         name: companies-xlsx
@@ -62,6 +62,6 @@ jobs:
     - shell: bash
       run: |
         test -f companies.csv
-        test -f companies-xlsx
+        test -f companies.xlsx
         grep "MSFT" companies.csv
     
