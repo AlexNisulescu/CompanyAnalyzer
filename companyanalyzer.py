@@ -1,4 +1,3 @@
-from asyncore import read
 from datetime import date
 from os import path
 import pandas as pd  # Used to store data in a dataframe
@@ -65,50 +64,59 @@ def get_details(tkrs):
     # Parses the whole list of tickers
     for ticker in tkrs:
         # Requests the company details
+        print("Downloading data for " + ticker)
         details = yf.Ticker(ticker)
         try:
-            details.info['totalCash'] = int(details.info['totalCash'])
-        except TypeError:
-            details.info['totalCash'] = 0
-        try:
-            details.info['totalAssets'] = int(details.info['totalAssets'])
-        except TypeError:
-            details.info['totalAssets'] = 0
-        try:
-            details.info['totalDebt'] = int(details.info['totalDebt'])
-        except TypeError:
-            details.info['totalDebt'] = 0
-        # Calculates a company worth
-        worth = calculate_worth(details.info['totalCash'],
-                details.info['totalAssets'], details.info['totalDebt'])
-        # Saves the stock price ten years ago
-        ten_years_price = details.history(period='10y')
-        # Saves current price
-        current_price = details.history(period='1d')
-        # Calculates the intrinsic value of the company
-        intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
-                          current_price['Close'][0], ten_years_price['Close'][0])
-        # Calculates the safety margin
-        safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
-        # Formats the safety margin in a more human readable format
-        safety_margin = str(safety_margin) + '%'
-        # Creates a new row for the dataframe
-        new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
-        details.info['industry'], 'MarketCap':details.info['marketCap'],
-        'P/E':details.info['trailingPE'], 'Current Price':
-        details.info['currentPrice'], 'Intrinsic Value':intrinsic_value,
-        'Margin of Safety':safety_margin,'Debt to Equity':details.info['debtToEquity'],
-        'Profit Margins':details.info['profitMargins'], 'Gross Margins':
-        details.info['grossMargins'], 'Five Years Average Dividend Yeald':
-        details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
-        details.info['lastDividendValue'], 'Worth':worth ,
-        'Total Cash':details.info['totalCash'],'Total Assets':
-        details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
-        'Forward P/E':details.info['forwardPE']}
-        # Appends the new row to the dataframe
-        new_row = pd.DataFrame([new_row], index=['Name'])
-        # new_row = pd.DataFrame.from_dict(new_row, index='Name')
-        df = pd.concat([df, new_row], ignore_index=True)
+            try:
+                details.info['totalCash'] = int(details.info['totalCash'])
+            except TypeError:
+                details.info['totalCash'] = 0
+            try:
+                details.info['totalAssets'] = int(details.info['totalAssets'])
+            except TypeError:
+                details.info['totalAssets'] = 0
+            try:
+                details.info['totalDebt'] = int(details.info['totalDebt'])
+            except TypeError:
+                details.info['totalDebt'] = 0
+            # Calculates a company worth
+            worth = calculate_worth(details.info['totalCash'],
+                    details.info['totalAssets'], details.info['totalDebt'])
+            # Saves the stock price ten years ago
+            ten_years_price = details.history(period='10y')
+            # Saves current price
+            current_price = details.history(period='1d')
+            # Calculates the intrinsic value of the company
+            try:
+                intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
+                              current_price['Close'][0], ten_years_price['Close'][0])
+                # Calculates the safety margin
+                safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
+                # Formats the safety margin in a more human readable format
+                safety_margin = str(safety_margin) + '%'
+            except:
+                print("Intrinsic value could not be compiled.")
+                intrinsic_value = 0
+            # Creates a new row for the dataframe
+            new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
+            details.info['industry'], 'MarketCap':details.info['marketCap'],
+            'P/E':details.info['trailingPE'], 'Current Price':
+            details.info['currentPrice'], 'Intrinsic Value':intrinsic_value,
+            'Margin of Safety':safety_margin,'Debt to Equity':details.info['debtToEquity'],
+            'Profit Margins':details.info['profitMargins'], 'Gross Margins':
+            details.info['grossMargins'], 'Five Years Average Dividend Yeald':
+            details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
+            details.info['lastDividendValue'], 'Worth':worth ,
+            'Total Cash':details.info['totalCash'],'Total Assets':
+            details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
+            'Forward P/E':details.info['forwardPE']}
+            # Appends the new row to the dataframe
+            new_row = pd.DataFrame([new_row], index=['Name'])
+            # new_row = pd.DataFrame.from_dict(new_row, index='Name')
+            df = pd.concat([df, new_row], ignore_index=True)
+        except:
+            print("Ticker for " + ticker + " doesn't exists, or data could not be downloaded.")
+            continue
     # Sorts the companies by MarketCap
     df.sort_values(by=['MarketCap'], inplace=True)
     # Resets the index
@@ -124,18 +132,20 @@ def save_dataframe_to_excell(df):
         wb = load_workbook('companies.xlsx', read_only=False)
         if today.strftime("%d.%m.%Y") not in wb.sheetnames:
             with pd.ExcelWriter('companies.xlsx',
-                            mode='a') as writer:  
+                            mode='a') as writer:
                 df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
         else:
             print("Attention! Data already downloaded today")
             answer = input("Would you like to overwrite it? y/n:")
             if answer == "y":
-                # wb.remove_sheet(wb[today.strftime("%d.%m.%Y")])
-                del wb[today.strftime("%d.%m.%Y")]
+                wb[today.strftime("%d.%m.%Y")].title="old"
                 wb.save('companies.xlsx')
                 with pd.ExcelWriter('companies.xlsx',
-                            mode='a') as writer:  
+                            mode='a') as writer:
                     df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
+                wb = load_workbook('companies.xlsx', read_only=False)
+                del wb['old']
+                wb.save('companies.xlsx')
     else:
         df.to_excel('companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
 
