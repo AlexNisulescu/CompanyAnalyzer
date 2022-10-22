@@ -106,7 +106,9 @@ def get_details(tkrs):
         details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
         'Forward P/E':details.info['forwardPE']}
         # Appends the new row to the dataframe
-        df = df.append(new_row, ignore_index=True)
+        new_row = pd.DataFrame([new_row], index=['Name'])
+        # new_row = pd.DataFrame.from_dict(new_row, index='Name')
+        df = pd.concat([df, new_row], ignore_index=True)
     # Sorts the companies by MarketCap
     df.sort_values(by=['MarketCap'], inplace=True)
     # Resets the index
