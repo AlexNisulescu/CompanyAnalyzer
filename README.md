@@ -66,4 +66,12 @@ The script has no options required at running, except the existence of Tickers w
     Contact: alexandru.nisulescu@gmail.com
     Linkedin: https://www.linkedin.com/in/alex-nisulescu-45822b178/
 
+    Contributor: Roberto Răducu
+    Contact: raducu.roberto98@gmail.com
+    Linkedin: https://www.linkedin.com/in/roberto-c%C4%83t%C4%83lin-r%C4%83ducu-61843b202/
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## DISCLAIMER
+
+THE INFORMATION FROM THIS REPOSITORY AND THE RESOURCES AVAILABLE FOR DOWNLOAD IS NOT INTEDNDE AND SHALL NOT BE UNDERSTOOD AS FINANCIAL ADVISE.
