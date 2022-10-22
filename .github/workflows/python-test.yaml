@@ -29,6 +29,7 @@ jobs:
     - name: Populates Tickers
       run: |
         echo "MSFT" > Tickers
+        echo "save_dataframe_to_csv(companydf)" >> companyanalyzer.py
     - name: Run the script
       run: |
         python3 companyanalyzer.py
@@ -37,6 +38,12 @@ jobs:
       with:
         name: companies-csv
         path: companies.csv
+        retention-days: 1
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: companies-xlsx
+        path: companies.xlsx
         retention-days: 1
   test:
     needs: build
@@ -47,8 +54,13 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: companies-csv
+    - name: Download script xlsx output
+      uses: actions/download-artifact@v3
+      with:
+        name: companies-xlsx
     - shell: bash
       run: |
         test -f companies.csv
+        test -f companies-xlsx
         grep "MSFT" companies.csv
     
