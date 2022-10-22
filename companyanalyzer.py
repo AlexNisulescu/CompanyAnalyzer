@@ -1,9 +1,8 @@
-from datetime import date
-from os import path
+from datetime import date # Used to get current date
+from os import path # Used to check if file exists
 import pandas as pd  # Used to store data in a dataframe
 import yfinance as yf  # Used for financial data
 from openpyxl import load_workbook # Used for importing excel files
-
 
 # This function is used to return Earnings per share of a company
 def earning_per_share_calculator(price_to_earnings, current_price):
@@ -19,7 +18,7 @@ def intrinsic_value_calculator(price_to_earnings, current_price, ten_years_price
     # EPS = earnings_per_share
     # g = growth_rate
     # Y = bond_yield
-    Y = 5.21
+    Y = 4.3
     earnings_per_share = earning_per_share_calculator(price_to_earnings, current_price)
     growth_rate = growth_rate_calculator(ten_years_price, current_price)
     return int((earnings_per_share * (8.5 + (2 * growth_rate)) * 4.4) / Y)
@@ -93,7 +92,8 @@ def get_details(tkrs):
                 # Calculates the safety margin
                 safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
                 # Formats the safety margin in a more human readable format
-                safety_margin = str(safety_margin) + '%'
+                safety_margin = str(safety_margin) + "%"
+                safety_margin = safety_margin.replace(".", ",")
             except:
                 print("Intrinsic value could not be compiled.")
                 intrinsic_value = 0
@@ -161,4 +161,3 @@ companydf = get_details(tickers)
 companydf.index += 1
 # Saving the details to an Excell file
 save_dataframe_to_excell(companydf)
-save_dataframe_to_csv(companydf)

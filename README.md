@@ -9,6 +9,7 @@
 * [Requirements](#requirements)
 * [How to use it](#how-to-use-it)
 * [Contributors](#contributors)
+* [Disclaimer](#disclaimer)
 
 ## Introduction
 
