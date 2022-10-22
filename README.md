@@ -67,3 +67,7 @@ The script has no options required at running, except the existence of Tickers w
     Linkedin: https://www.linkedin.com/in/alex-nisulescu-45822b178/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## DISCLAIMER
+
+THE INFORMATION FROM THIS REPOSITORY AND THE RESOURCES AVAILABLE FOR DOWNLOAD IS NOT INTEDNDE AND SHALL NOT BE UNDERSTOOD AS FINANCIAL ADVISE.
