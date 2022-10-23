@@ -28,9 +28,8 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Populates Tickers
       run: |
-        echo "MSFT" > Tickers
+        echo "MSFT" > ./files/Tickers
         echo "" >> companyanalyzer.py
-        echo "save_dataframe_to_csv(companydf)" >> companyanalyzer.py
     - name: Run the script
       run: |
         python3 companyanalyzer.py
