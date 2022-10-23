@@ -8,6 +8,8 @@ RUN pip3 install -r requirements.txt
 
 COPY companyanalyzer.py .
 
-COPY Tickers .
+RUN mkdir -p files
+
+COPY Tickers ./files
 
 CMD [ "python3", "companyanalyzer.py" ]

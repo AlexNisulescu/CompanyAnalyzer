@@ -28,9 +28,8 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Populates Tickers
       run: |
-        echo "MSFT" > Tickers
+        echo "MSFT" > ./files/Tickers
         echo "" >> companyanalyzer.py
-        echo "save_dataframe_to_csv(companydf)" >> companyanalyzer.py
     - name: Run the script
       run: |
         python3 companyanalyzer.py
@@ -38,13 +37,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: companies-csv
-        path: companies.csv
+        path: ./files/companies.csv
         retention-days: 1
     - name: 'Upload excel Artifact'
       uses: actions/upload-artifact@v3
       with:
         name: companies-xlsx
-        path: companies.xlsx
+        path: ./files/companies.xlsx
         retention-days: 1
   test:
     needs: build

@@ -57,6 +57,41 @@ def calculate_worth(cash, assets, debt):
     worth = cash + assets - debt
     return worth
 
+# This function returns a new row for the dataframe when P/E is missing
+def get_new_row_without_intrinsic_value(ticker, details, worth):
+    new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
+    details.info['industry'], 'MarketCap':details.info['marketCap'],
+    'Current Price':details.info['currentPrice'], 'Debt to Equity':
+    details.info['debtToEquity'],'Profit Margins':
+    details.info['profitMargins'], 'Gross Margins':
+    details.info['grossMargins'], 'Five Years Average Dividend Yeald':
+    details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
+    details.info['lastDividendValue'], 'Worth':worth ,
+    'Total Cash':details.info['totalCash'],'Total Assets':
+    details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
+    'Forward P/E':details.info['forwardPE']}
+    # Formats the new_row as a dataframe
+    new_row = pd.DataFrame([new_row], index=['Name'])
+    return new_row
+
+# This function returns a new row for the dataframe
+def get_new_row(ticker, details, intrinsic_value, safety_margin, worth):
+    new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
+    details.info['industry'], 'MarketCap':details.info['marketCap'],
+    'P/E':details.info['trailingPE'], 'Current Price':
+    details.info['currentPrice'], 'Intrinsic Value':intrinsic_value,
+    'Margin of Safety':safety_margin,'Debt to Equity':details.info['debtToEquity'],
+    'Profit Margins':details.info['profitMargins'], 'Gross Margins':
+    details.info['grossMargins'], 'Five Years Average Dividend Yeald':
+    details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
+    details.info['lastDividendValue'], 'Worth':worth ,
+    'Total Cash':details.info['totalCash'],'Total Assets':
+    details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
+    'Forward P/E':details.info['forwardPE']}
+    # Formats the new_row as a dataframe
+    new_row = pd.DataFrame([new_row], index=['Name'])
+    return new_row
+
 # This function gets the details of the companies and stores them in a dataframe
 def get_details(tkrs):
     df = create_df()
@@ -86,37 +121,27 @@ def get_details(tkrs):
             # Saves current price
             current_price = details.history(period='1d')
             # Calculates the intrinsic value of the company
-            try:
-                intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
-                              current_price['Close'][0], ten_years_price['Close'][0])
-                # Calculates the safety margin
-                safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
-                # Formats the safety margin in a more human readable format
-                safety_margin = str(safety_margin) + "%"
-                safety_margin = safety_margin.replace(".", ",")
-            except:
-                print("Intrinsic value could not be compiled.")
-                intrinsic_value = 0
             # Creates a new row for the dataframe
-            new_row = {'Name':ticker, 'Sector':details.info['sector'], 'Industry':
-            details.info['industry'], 'MarketCap':details.info['marketCap'],
-            'P/E':details.info['trailingPE'], 'Current Price':
-            details.info['currentPrice'], 'Intrinsic Value':intrinsic_value,
-            'Margin of Safety':safety_margin,'Debt to Equity':details.info['debtToEquity'],
-            'Profit Margins':details.info['profitMargins'], 'Gross Margins':
-            details.info['grossMargins'], 'Five Years Average Dividend Yeald':
-            details.info['fiveYearAvgDividendYield'], 'Last Dividend Value':
-            details.info['lastDividendValue'], 'Worth':worth ,
-            'Total Cash':details.info['totalCash'],'Total Assets':
-            details.info['totalAssets'], 'Total Debt':details.info['totalDebt'],
-            'Forward P/E':details.info['forwardPE']}
-            # Appends the new row to the dataframe
-            new_row = pd.DataFrame([new_row], index=['Name'])
-            # new_row = pd.DataFrame.from_dict(new_row, index='Name')
-            df = pd.concat([df, new_row], ignore_index=True)
         except:
             print("Ticker for " + ticker + " doesn't exists, or data could not be downloaded.")
             continue
+        try:
+            intrinsic_value = intrinsic_value_calculator(details.info['trailingPE'],
+                          current_price['Close'][0], ten_years_price['Close'][0])
+            # Calculates the safety margin
+            safety_margin = margin_of_safety(intrinsic_value, current_price['Close'][0])
+            # Formats the safety margin in a more human readable format
+            safety_margin = str(safety_margin) + "%"
+            safety_margin = safety_margin.replace(".", ",")
+        except:
+            new_row = get_new_row_without_intrinsic_value(ticker, details, worth)
+            df = pd.concat([df, new_row], ignore_index=True)
+            print("Intrinsic value could not be compiled.. Missing P/E..")
+            print("This usually occurs for the new listed companies..")
+            continue
+        new_row = get_new_row(ticker, details, intrinsic_value, safety_margin, worth)
+        # Appends the new row to the dataframe
+        df = pd.concat([df, new_row], ignore_index=True)
     # Sorts the companies by MarketCap
     df.sort_values(by=['MarketCap'], inplace=True)
     # Resets the index
@@ -128,36 +153,36 @@ def get_details(tkrs):
 # This functions saves the dataframe to an excel
 def save_dataframe_to_excell(df):
     today = date.today()
-    if (path.exists('companies.xlsx')):
-        wb = load_workbook('companies.xlsx', read_only=False)
+    if (path.exists('files/companies.xlsx')):
+        wb = load_workbook('files/companies.xlsx', read_only=False)
         if today.strftime("%d.%m.%Y") not in wb.sheetnames:
-            with pd.ExcelWriter('companies.xlsx',
+            with pd.ExcelWriter('files/companies.xlsx',
                             mode='a') as writer:
                 df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
         else:
-            print("Attention! Data already downloaded today")
-            answer = input("Would you like to overwrite it? y/n:")
-            if answer == "y":
-                wb[today.strftime("%d.%m.%Y")].title="old"
-                wb.save('companies.xlsx')
-                with pd.ExcelWriter('companies.xlsx',
-                            mode='a') as writer:
-                    df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
-                wb = load_workbook('companies.xlsx', read_only=False)
-                del wb['old']
-                wb.save('companies.xlsx')
+            print("Attention! Data already downloaded today...")
+            print("Overwriteing it...")
+            wb[today.strftime("%d.%m.%Y")].title="old"
+            wb.save('files/companies.xlsx')
+            with pd.ExcelWriter('files/companies.xlsx',
+                        mode='a') as writer:
+                df.to_excel(writer, sheet_name=today.strftime("%d.%m.%Y"))
+            wb = load_workbook('files/companies.xlsx', read_only=False)
+            del wb['old']
+            wb.save('files/companies.xlsx')
     else:
-        df.to_excel('companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
+        df.to_excel('files/companies.xlsx', sheet_name=today.strftime("%d.%m.%Y"))
 
 # This functions saves the dataframe to a csv
 def save_dataframe_to_csv(df):
-    df.to_csv('companies.csv')
+    df.to_csv('files/companies.csv')
 
 # Reading the tickers
-tickers = read_tickers("Tickers")
+tickers = read_tickers("files/Tickers")
 # Getting companies details
 companydf = get_details(tickers)
 # Starting the index count from 1
 companydf.index += 1
 # Saving the details to an Excell file
 save_dataframe_to_excell(companydf)
+save_dataframe_to_csv(companydf)
