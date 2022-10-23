@@ -77,12 +77,12 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           install: true
+      - name: Build the image
+        run: |
+          docker build --load --tag $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6} .
       - name: Log in to Docker Hub
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - name: Build the image
-        run: |
-          docker build --load --tag $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6} . 
       - name: Push the image
         run: |
-          docker push $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
+          docker push alexnisulescu/company_analyzer:${GITHUB_SHA::6}
