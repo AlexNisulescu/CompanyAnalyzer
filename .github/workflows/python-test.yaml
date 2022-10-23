@@ -64,4 +64,19 @@ jobs:
         test -f companies.csv
         test -f companies.xlsx
         grep "MSFT" companies.csv
-    
+  push:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
+      REPO_NAME: ${{secrets.DOCKERHUB_REPO}}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3 
+      - name: Build the image
+        run: |
+          docker build --tag $REPO_NAME:${GITHUB_SHA::6} .
+      - name: Push the image
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker push $REPO_NAME:${GITHUB_SHA::6}
