@@ -67,11 +67,11 @@ The first one involves downloading all the data locally, install all the [requir
 
 The second one is much simpler and requires [Docker](https://www.docker.com/). First you must create a directory where you will store all the data and inside it add the "Tickers" file. Now the next step is to run the Docker container using the below command from inside the folder:
 
-    docker run --name CA -d --mount type=bind,source="$(pwd)",target=/app/files alexnisulescu/company_analyzer
+    docker run -d --mount type=bind,source="$(pwd)",target=/app/files alexnisulescu/company_analyzer
 
 or using the absolute path:
 
-    docker run --name CA -d --mount type=bind,source="path/to/directory",target=/app/files alexnisulescu/company_analyzer
+    docker run -d --mount type=bind,source="path/to/directory",target=/app/files alexnisulescu/company_analyzer
 
 It is essential to create a bind mount in order to have the output on your host.
 
