@@ -80,9 +80,7 @@ jobs:
       - name: Build the image
         run: |
           docker build --load --tag $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6} .
-      - name: Log in to Docker Hub
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Push the image
         run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker push alexnisulescu/company_analyzer:${GITHUB_SHA::6}
