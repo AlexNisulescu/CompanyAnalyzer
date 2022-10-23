@@ -77,11 +77,11 @@ jobs:
           install: true
       - name: Build the image
         run: |
-          docker build --load -t $DOCKER_USER/$REPO_NAME:latest -t $DOCKER_USER/$REPO_NAME:$${GITHUB_SHA::6} --target deploy .
+          docker build --load -t $DOCKER_USER/$REPO_NAME:latest -t $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6} --target deploy .
       - name: Log in to Docker Hub
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: Push the image
         run: |
           docker push $DOCKER_USER/$REPO_NAME:latest
-          docker push $DOCKER_USER/$REPO_NAME:$${GITHUB_SHA::6}
+          docker push $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
