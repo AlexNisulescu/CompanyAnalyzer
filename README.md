@@ -14,6 +14,10 @@
 ## Introduction
 
 This script was created from the need to simplify the way I analyze the financial data of companies.
+In files/ you can check example for the input and output data:
+
+* input: Tickers
+* output: companies.csv, companies.xlsx
 
 ## Requirements
 
@@ -53,11 +57,23 @@ The data downloaded by it is:
 
 ## How to use it
 
-Syntax:
+The script has no options required at running, except the existence of files/Tickers where companies tickers will need to be placed on a new row.
+
+There are mainly to ways to run it. 
+
+The first one involves downloading all the data locally, install all the [requirements](#requirements) and run the script using the below syntax:
 
     python3 companyanalyzer.py
 
-The script has no options required at running, except the existence of Tickers where they will need to be placed on a new row the tickers of the companies which you want to analyze.
+The second one is much simpler and requires [Docker](https://www.docker.com/). First you must create a directory where you will store all the data and inside it add the "Tickers" file. Now the next step is to run the Docker container using the below command from inside the folder:
+
+    docker run -d --mount type=bind,source="$(pwd)",target=/app/files alexnisulescu/company_analyzer
+
+or using the absolute path:
+
+    docker run -d --mount type=bind,source="path/to/directory",target=/app/files alexnisulescu/company_analyzer
+
+It is essential to create a bind mount in order to have the output on your host.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
