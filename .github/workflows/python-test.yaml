@@ -67,6 +67,7 @@ jobs:
   push:
     needs: test
     runs-on: ubuntu-latest
+    environment: production
     env:
       DOCKER_USER: ${{secrets.DOCKERHUB_USERNAME}}
       DOCKER_PASSWORD: ${{secrets.DOCKERHUB_TOKEN}}
