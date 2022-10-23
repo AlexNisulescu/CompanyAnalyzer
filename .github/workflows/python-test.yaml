@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v3 
       - name: Build the image
         run: |
-          docker build --load --tag $REPO_NAME:${GITHUB_SHA::6} .
+          docker build --tag $REPO_NAME:${GITHUB_SHA::6} .
       - name: Push the image
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
