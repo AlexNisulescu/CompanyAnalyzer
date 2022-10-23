@@ -81,4 +81,4 @@ jobs:
           docker build . --file Dockerfile --tag $DOCKER_USER/$REPO_NAME:${GITHUB_SHA::6}
       - name: Push the image
         run: |
-          docker push $DOCKER_USER/REPO_NAME
+          docker push $DOCKER_USER/$REPO_NAME
