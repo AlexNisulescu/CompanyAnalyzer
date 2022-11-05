@@ -1,6 +1,6 @@
 # Python script for downloading financial data for listed companies
 
-[![Status](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml/badge.svg)](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml) [![HitCount](https://hits.dwyl.com/AlexNisulescu/CompanyAnalyzer.svg?style=flat)](http://hits.dwyl.com/AlexNisulescu/CompanyAnalyzer)
+[![Status](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml/badge.svg)](https://github.com/AlexNisulescu/CompanyAnalyzer/actions/workflows/python-test.yaml) [![HitCount](https://hits.dwyl.com/AlexNisulescu/CompanyAnalyzer.svg?style=flat)](http://hits.dwyl.com/AlexNisulescu/CompanyAnalyzer) <a href="https://www.buymeacoffee.com/alexnisuleXu" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 <a name="readme-top"></a>
 ## Index
 
